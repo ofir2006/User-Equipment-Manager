@@ -1,0 +1,30 @@
+ {% extends "base.html" %}
+    
+{% block content %}
+
+      <form method="POST" class="form-inline justify-content-center" style=" margin-top:50px">
+        <input class="form-control mr-sm-2" name="itemname" id="itemname" type="search" placeholder="Item name">
+        <button href="/api/search" class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
+      </form>
+
+
+  <div>
+
+
+    <div>
+
+        <div class="d-flex">
+        <ul class="mx-auto list-group list-group-flush" style="margin-top:50px; width:500px">
+        {% for item in items %}
+          <li class="list-group-item">{{item.name}}
+            <button type="button" class="close" onclick="deleteItem({{ item.id }})">
+            <span aria-hidden="true">&times;</span>
+        </button>  
+        </li>
+        {% endfor %}
+          <li class="list-group-item"></li>
+        </ul>
+      </div>
+    </div>
+
+    {% endblock %}

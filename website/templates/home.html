@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+    
+{%block content%}
+
+      <form method="POST" class="form-inline justify-content-center" style="margin-top:50px">
+        <input class="form-control mr-sm-2" name="name" id="search" type="search" placeholder="Search user" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+  
+      {% if owner.name %}
+      <h1 align="center" style="margin-top:50px; margin-bottom:50px">{{owner.name.title()}}</h1>
+      {% else %}
+      <h1 align="center" style="margin-top:50px">{{error}}</h1>
+      {% endif %}
+
+
+      {% if owner.name %}
+      <form method="POST" class="form-inline justify-content-center" enctype = "multipart/form-data">
+        <div class="form-group mx-sm-3 mb-2">
+          <label for="inputitem" class="sr-only">Item name</label>
+          <input type="text" class="form-control" name="inputitem" id="inputitem" placeholder="Item name">
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+          <label for="notes" class="sr-only">Notes</label>
+          <input type="text" class="form-control" name="notes" id="notes" placeholder="Notes">
+       <input type="hidden" name="username" value="{{owner.name}}">
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+          <label for="file" class="sr-only">File</label>
+          <input type="file" class="form-control" name="file" id="file" placeholder="Notes">
+       <input type="hidden" name="username" value="{{owner.name}}">
+        </div>
+        <button type="submit" class="btn btn-primary mb-2">Add</button>
+      </form>
+      
+        <div class="container">
+      <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date Created</th>
+                <th>Created By</th>
+                <th>Notes</th>
+                <th>Attached files</th>
+            <tr>
+        </thead>
+        <tbody>
+            {% for item in owner.items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.createdBy.title() }}</td>
+                <td>{{ item.notes}}</td>
+                {% if item.fileName %}
+                <td><a href="/static/uploads/{{ item.fileName }}">Download file</a></td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                <td><button type="button" class="close" onclick="deleteItem({{ item.id }})">
+                  <span aria-hidden="true">&times;</span>
+              </button> </td>
+              </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+
+      <script>
+        $( function() {
+          var availableTags = {{userlist | safe}};
+          $( "#search" ).autocomplete({
+            source: availableTags
+          });
+        });
+        </script>
+   
+    <script>
+      $( function() {
+        var availableTags = {{itemlist | safe}};
+        $( "#inputitem" ).autocomplete({
+          source: availableTags
+        });
+      });
+      </script>
+   
+   {% endblock %}
